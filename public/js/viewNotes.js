@@ -43,6 +43,9 @@ const createCard = (note, noteId) => {
         <div class="card-content">
           <div class="content">${note.text}</div>
         </div>
+        <div class="card-content">
+          <div class="content" style="text-align:right">${note.date}</div>
+        </div>
         <footer class="card-footer">
             <a href="#" class="card-footer-item" onclick="editNote('${noteId}')">
                 Edit
@@ -50,6 +53,7 @@ const createCard = (note, noteId) => {
             <a href="#" class="card-footer-item" onclick="deleteNote('${noteId}')">
                 Delete
             </a>
+        
         </footer>
       </div>
     </div>
@@ -57,6 +61,7 @@ const createCard = (note, noteId) => {
 }
 
 const deleteNote = (noteId) => {
+    alert("are you sure!")
     firebase.database().ref(`users/${googleUserId}/${noteId}`).remove()
 }
 
@@ -68,6 +73,7 @@ const editNote = (noteId) => {
         const note = data[noteId]
         document.querySelector('#editTitleInput').value = note.title;
         document.querySelector('#editTextInput').value = note.text;
+        document.querySelector('#editDateInput').value = note.date;
         document.querySelector('#editNoteId').value = noteId;
     })
     
@@ -83,10 +89,12 @@ const closeEditModal = () =>{
 const saveEditedNote = () => {
     const noteTitle = document.querySelector("#editTitleInput").value
     const noteText = document.querySelector("#editTextInput").value
+    const noteDate = document.querySelector("#editDateInput").value
     const noteId = document.querySelector("#editNoteId").value
     const noteEdits = {
         title: noteTitle,
         text: noteText,
+        date: noteDate
     }
     firebase.database().ref(`users/${googleUserId}/${noteId}`).update(noteEdits)
     closeEditModal()
